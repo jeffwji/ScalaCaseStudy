@@ -1,33 +1,45 @@
-val catsVersion = "1.6.0"
-val catsEffectVersion = "1.2.0"
-val scalaTestVersion = "3.0.5"
-val specs2Version = "4.3.5"
-val logBackVersion = "1.2.3"
-val scalaLogging = "3.9.2"
-val catsTaglessVersion = "0.5"
+organization := "com.example"
+version := "0.1"
 
-lazy val CatsExamples = (project in file(".")).
-        settings(
-            organization := "com.example",
-            version := "0.1",
+lazy val scalaLibraries = new {
+        val catsVersion = "1.6.0"
+        val catsEffectVersion = "1.2.0"
+        val scalaTestVersion = "3.0.5"
+        val specs2Version = "4.3.5"
+        val logBackVersion = "1.2.3"
+        val scalaLoggingVersion = "3.9.2"
+        val catsTaglessVersion = "0.5"
+
+        val scalaTest = "org.scalatest" %% "scalatest" % scalaTestVersion % Test
+        val scalaCheck = "org.scalacheck" %% "scalacheck" % "1.14.0" % Test
+        val catsCore = "org.typelevel" %% "cats-core" % catsVersion
+        val catsFree = "org.typelevel" %% "cats-free" % catsVersion
+        val catsEffect = "org.typelevel" %% "cats-effect" % catsEffectVersion
+        val taglessMacros = "org.typelevel" %% "cats-tagless-macros" % catsTaglessVersion
+        val taglessLegacy = "org.typelevel" %% "cats-tagless-legacy-macros" % catsTaglessVersion
+        val mtlCore = "org.typelevel" %% "cats-mtl-core" % "0.2.1"
+        val typesafeConfig = "com.typesafe" % "config" % "1.3.1"
+        val logback = "ch.qos.logback" % "logback-classic" % logBackVersion
+        val scalaLogging = "com.typesafe.scala-logging" %% "scala-logging" % scalaLoggingVersion
+    }
+
+lazy val scalaDependencies = Seq(
+    scalaLibraries.scalaTest,
+    scalaLibraries.scalaCheck,
+    scalaLibraries.catsCore,
+    scalaLibraries.catsFree,
+    scalaLibraries.catsEffect,
+    scalaLibraries.taglessMacros,
+    scalaLibraries.taglessLegacy,
+    scalaLibraries.mtlCore,
+    scalaLibraries.logback,
+    scalaLibraries.scalaLogging,
+)
+lazy val ScalaCaseStudy = project
+        .settings(
             name := "ScalaCaseStudy",
-            scalaVersion := "2.12.7",
-            resolvers ++= Seq(
-                "Typesafe backup repo" at "https://repo.typesafe.com/typesafe/repo/"
-            ),
-            libraryDependencies ++= Seq(
-                "org.scalatest" %% "scalatest" % scalaTestVersion % Test,
-                "org.scalacheck" %% "scalacheck" % "1.14.0" % Test,
-                "org.typelevel" %% "cats-core" % catsVersion,
-                "org.typelevel" %% "cats-free" % catsVersion,
-                "org.typelevel" %% "cats-effect" % catsEffectVersion,
-                "org.typelevel" %% "cats-tagless-macros" % catsTaglessVersion,
-                "org.typelevel" %% "cats-tagless-legacy-macros" % catsTaglessVersion,
-                "org.typelevel" %% "cats-mtl-core" % "0.2.1",
-                //"com.typesafe" %% "config" % "1.3.1",
-                "ch.qos.logback" % "logback-classic" % logBackVersion,
-                "com.typesafe.scala-logging" %% "scala-logging" % scalaLogging,
-            ),
+            scalaVersion := "2.12.8",
+            libraryDependencies ++= scalaDependencies,
             addCompilerPlugin("org.scalameta" %% "paradise" % "3.0.0-M11" cross CrossVersion.full),
             addCompilerPlugin("org.spire-math" %% "kind-projector" % "0.9.4"),
             scalacOptions ++= Seq(
@@ -39,4 +51,30 @@ lazy val CatsExamples = (project in file(".")).
                 "-feature",
                 "-language:_"
             )
+        )
+
+
+lazy val javaLibraries = new {
+    val junitVersion = "4.12"
+    val log4jVersion = "1.2.17"
+    val slf4jVersion = "1.7.25"
+
+    val junit = "junit" % "junit" % junitVersion % Test
+    val log4j = "log4j" % "log4j" % log4jVersion
+    val slf4j = "org.slf4j" % "slf4j-api" % slf4jVersion
+}
+
+lazy val javaDependencies = Seq(
+    javaLibraries.junit,
+    javaLibraries.log4j,
+    javaLibraries.slf4j
+)
+
+lazy val JavaCaseStudy = project
+        .settings(
+            name := "JavaCaseStudy",
+            resolvers ++= Seq(
+                "Maven central repo" at "https://repo1.maven.org/maven2/"
+            ),
+            libraryDependencies ++= javaDependencies
         )
