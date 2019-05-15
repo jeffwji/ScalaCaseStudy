@@ -50,7 +50,7 @@ public class SingletonTest extends TestCase {
         Singleton[] results = new Singleton[threadNumber];
 
         for(int i=0; i<threadNumber; i++) {
-            int finalI = i;
+            final int finalI = i;
             executor.execute(() -> {
                 try {
                     long threadId = Thread.currentThread().getId();
