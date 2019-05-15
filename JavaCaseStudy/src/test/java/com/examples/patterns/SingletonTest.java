@@ -41,11 +41,7 @@ public class SingletonTest extends TestCase {
     }
 
     @Test
-    public void testEagerSingleton() throws InterruptedException {
-        testSingleton();
-    }
-
-    protected void testSingleton() throws InterruptedException{
+    public void testSingleton() throws InterruptedException{
         //final Set<Singleton> result = ConcurrentHashMap.newKeySet();
         Singleton[] results = new Singleton[threadNumber];
 
@@ -55,7 +51,6 @@ public class SingletonTest extends TestCase {
                 try {
                     long threadId = Thread.currentThread().getId();
                     logger.info("[Thread-" + threadId + "] is running");
-                    //result.add(singleton);
                     results[finalI] = Singleton.getInstance();
                     logger.info("[Thread-" + threadId + "] is finished");
                 }
