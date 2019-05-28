@@ -15,20 +15,20 @@ object MultipleStream extends App {
     trait blueprint {
         type FutureResult = Future[List[_]]
 
-        def start_1: Source[Unit, NotUsed]
-        def step1_1: Flow[Unit, Unit, NotUsed]
-        def step1_2: Flow[Unit, Unit, NotUsed]
-        def out_1: Sink[Unit, FutureResult]
+        def start_1[A]: Source[A, NotUsed]
+        def step1_1[A,B]: Flow[A,B, NotUsed]
+        def step1_2[A,B]: Flow[A,B, NotUsed]
+        def out_1[A]: Sink[A, FutureResult]
 
         def stream1: RunnableGraph[FutureResult] = RunnableGraph.fromGraph(GraphDSL.create(out_1){ implicit builder: GraphDSL.Builder[FutureResult] => out_1 =>
             start_1 ~> step1_1 ~> step1_2 ~> out_1
             ClosedShape
         })
 
-        def start_2: Source[Unit, NotUsed]
-        def step2_1: Flow[Unit, Unit, NotUsed]
-        def step2_2: Flow[Unit, Unit, NotUsed]
-        def out_2: Sink[Unit, FutureResult]
+        def start_2[A]: Source[A, NotUsed]
+        def step2_1[A,B]: Flow[A,B, NotUsed]
+        def step2_2[A,B]: Flow[A,B, NotUsed]
+        def out_2[A]: Sink[A, FutureResult]
 
         def stream2: RunnableGraph[FutureResult] = RunnableGraph.fromGraph(GraphDSL.create(out_2){ implicit builder: GraphDSL.Builder[FutureResult] => out_2 =>
             start_2 ~> step2_1 ~> step2_2 ~> out_2
