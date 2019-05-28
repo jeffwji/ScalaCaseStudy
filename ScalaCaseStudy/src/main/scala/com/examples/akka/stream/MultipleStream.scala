@@ -35,21 +35,19 @@ object MultipleStream extends App {
             ClosedShape
         })
 
-        def comp(implicit system:ActorSystem): Future[(List[_], List[_])] = {
+        def comp(implicit system:ActorSystem): IO[Future[(List[_], List[_])]] = {
             implicit val materializer = ActorMaterializer()
-            val res = IO {
+            IO {
                 val r = for {
                     s1 <- stream1.run()
                     s2 <- stream2.run()
                 } yield (s1, s2)
-                r.onComplete {
-                    _ => {
+                r.onComplete { _ => {
                         system.terminate()
                         Await.result(system.whenTerminated, Duration.Inf)
                     }
                 };r
             }
-            res.unsafeRunSync()
         }
     }
 }
