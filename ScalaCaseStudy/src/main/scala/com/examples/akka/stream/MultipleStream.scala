@@ -35,7 +35,7 @@ object MultipleStream extends App {
             ClosedShape
         })
 
-        def _main(implicit system:ActorSystem): Future[(List[_], List[_])] = {
+        def comp(implicit system:ActorSystem): Future[(List[_], List[_])] = {
             implicit val materializer = ActorMaterializer()
             val res = IO {
                 val r = for {
