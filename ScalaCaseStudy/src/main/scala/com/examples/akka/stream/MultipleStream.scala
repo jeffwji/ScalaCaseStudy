@@ -49,5 +49,10 @@ object MultipleStream extends App {
                 };r
             }
         }
+
+        def comp2(implicit system:ActorSystem): IO[(FutureResult, FutureResult)] = {
+            implicit val materializer = ActorMaterializer()
+            IO(stream1.mapMaterializedValue(s1 => stream2.mapMaterializedValue( s2 => (s1, s2))).run().run())
+        }
     }
 }
