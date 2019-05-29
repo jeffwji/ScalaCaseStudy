@@ -52,12 +52,10 @@ object MultipleStream extends App {
 
         def comp2(implicit system:ActorSystem): IO[Future[(List[_], List[_])]] = {
             implicit val materializer = ActorMaterializer()
-            IO(stream1.mapMaterializedValue(s1 => stream2.mapMaterializedValue( s2 => {
-                for{
-                    f1 <- s1
-                    f2 <- s2
-                } yield (f1, f2)
-            })).run().run())
+            IO(stream1.mapMaterializedValue(s1 => stream2.mapMaterializedValue( s2 => for {
+                r1 <- s1
+                r2 <- s2
+            } yield (r1, r2))).run().run())
         }
     }
 }

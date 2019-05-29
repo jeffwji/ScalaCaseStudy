@@ -2,26 +2,33 @@ organization := "com.example"
 version := "0.1"
 
 lazy val scalaLibraries = new {
-        val catsVersion = "1.6.0"
-        val catsEffectVersion = "1.2.0"
-        val scalaTestVersion = "3.0.5"
-        val specs2Version = "4.3.5"
-        val logBackVersion = "1.2.3"
-        val scalaLoggingVersion = "3.9.2"
-        val catsTaglessVersion = "0.5"
+    val catsVersion = "1.6.0"
+    val catsEffectVersion = "1.2.0"
+    val scalaTestVersion = "3.0.5"
+    val specs2Version = "4.3.5"
+    val logBackVersion = "1.2.3"
+    val scalaLoggingVersion = "3.9.2"
+    val catsTaglessVersion = "0.5"
+    val akkaVersion = "2.5.23"
 
-        val scalaTest = "org.scalatest" %% "scalatest" % scalaTestVersion % Test
-        val scalaCheck = "org.scalacheck" %% "scalacheck" % "1.14.0" % Test
-        val catsCore = "org.typelevel" %% "cats-core" % catsVersion
-        val catsFree = "org.typelevel" %% "cats-free" % catsVersion
-        val catsEffect = "org.typelevel" %% "cats-effect" % catsEffectVersion
-        val taglessMacros = "org.typelevel" %% "cats-tagless-macros" % catsTaglessVersion
-        val taglessLegacy = "org.typelevel" %% "cats-tagless-legacy-macros" % catsTaglessVersion
-        val mtlCore = "org.typelevel" %% "cats-mtl-core" % "0.2.1"
-        val typesafeConfig = "com.typesafe" % "config" % "1.3.1"
-        val logback = "ch.qos.logback" % "logback-classic" % logBackVersion
-        val scalaLogging = "com.typesafe.scala-logging" %% "scala-logging" % scalaLoggingVersion
-    }
+    // Test
+    val scalaTest = "org.scalatest" %% "scalatest" % scalaTestVersion % Test
+    val scalaCheck = "org.scalacheck" %% "scalacheck" % "1.14.0" % Test
+    // Cats
+    val catsCore = "org.typelevel" %% "cats-core" % catsVersion
+    val catsFree = "org.typelevel" %% "cats-free" % catsVersion
+    val catsEffect = "org.typelevel" %% "cats-effect" % catsEffectVersion
+    val taglessMacros = "org.typelevel" %% "cats-tagless-macros" % catsTaglessVersion
+    val taglessLegacy = "org.typelevel" %% "cats-tagless-legacy-macros" % catsTaglessVersion
+    val mtlCore = "org.typelevel" %% "cats-mtl-core" % "0.2.1"
+    // Other
+    val typesafeConfig = "com.typesafe" % "config" % "1.3.1"
+    // Logging
+    val logback = "ch.qos.logback" % "logback-classic" % logBackVersion
+    val scalaLogging = "com.typesafe.scala-logging" %% "scala-logging" % scalaLoggingVersion
+    // Akka
+    val akkaStream = "com.typesafe.akka" %% "akka-stream" % akkaVersion
+}
 
 lazy val scalaDependencies = Seq(
     scalaLibraries.scalaTest,
@@ -34,8 +41,10 @@ lazy val scalaDependencies = Seq(
     scalaLibraries.mtlCore,
     scalaLibraries.logback,
     scalaLibraries.scalaLogging,
+    scalaLibraries.akkaStream
 )
 lazy val ScalaCaseStudy = project
+
         .settings(
             name := "ScalaCaseStudy",
             scalaVersion := "2.12.8",
