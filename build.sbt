@@ -1,9 +1,13 @@
 organization := "com.example"
 version := "0.1"
 
-lazy val logging = new {
+lazy val logging = {
     val logBackVersion = "1.2.3"
-    val logback = "ch.qos.logback" % "logback-classic" % logBackVersion
+    val scalaLoggingVersion = "3.9.2"
+    Seq(
+        "ch.qos.logback" % "logback-classic" % logBackVersion,
+        "com.typesafe.scala-logging" %% "scala-logging" % scalaLoggingVersion
+    )
 }
 
 lazy val chuusai = new {
@@ -12,7 +16,7 @@ lazy val chuusai = new {
     val scalacheck = "com.github.alexarchambault" %% "scalacheck-shapeless_1.14" % "1.2.3"
 }
 
-lazy val validation = {
+lazy val testing = {
     val scalaTestVersion = "3.0.5"
     val scalaMockVersion = "3.5.0"
     val scalaCheckVersion = "1.14.0"
@@ -27,7 +31,7 @@ lazy val validation = {
 lazy val typelevel = new {
     val catsVersion = "1.6.0"
     val catsEffectVersion = "1.3.1"
-    val catsTaglessVersion = "0.5"
+    val catsTaglessVersion = "0.9"
     val kittensVersion = "1.1.0"
     val spireVersion = "0.16.2"
     val mtlVersion = "0.5.0"
@@ -36,20 +40,18 @@ lazy val typelevel = new {
     val catsFree = "org.typelevel" %% "cats-free" % catsVersion
     val catsEffect = "org.typelevel" %% "cats-effect" % catsEffectVersion
     val taglessMacros = "org.typelevel" %% "cats-tagless-macros" % catsTaglessVersion
-    val taglessLegacy = "org.typelevel" %% "cats-tagless-legacy-macros" % catsTaglessVersion
+    val taglessCore = "org.typelevel" %% "cats-tagless-core" % catsTaglessVersion
     val kittens = "org.typelevel" %% "kittens" % kittensVersion
     val spire = "org.typelevel" %% "spire" % spireVersion
     val mtlCore = "org.typelevel" %% "cats-mtl-core" % mtlVersion
 }
 
 lazy val typesafe = new {
-    val scalaLoggingVersion = "3.9.2"
     val akkaVersion = "2.5.22"
     val akkaHttpVersion = "10.1.8"
     val configVersion = "1.3.1"
 
     val typesafeConfig = "com.typesafe" % "config" % configVersion
-    val scalaLogging = "com.typesafe.scala-logging" %% "scala-logging" % scalaLoggingVersion
     val akkaActor = "com.typesafe.akka"   %% "akka-actor"              % akkaVersion
     val akkaStream = "com.typesafe.akka"   %% "akka-stream"             % akkaVersion
     val akkaClusterSharding = "com.typesafe.akka"   %% "akka-cluster-sharding"   % akkaVersion
@@ -77,14 +79,12 @@ lazy val beachape = new {
     val enumeratumCats = "com.beachape" %% "enumeratum-cats" % version
 }
 
-lazy val scalaDependencies = validation ++ Seq(
-    typesafe.scalaLogging,
-    logging.logback,
+lazy val scalaDependencies = testing ++ logging ++ Seq(
     typelevel.catsCore,
     typelevel.catsFree,
     typelevel.catsEffect,
     typelevel.taglessMacros,
-    typelevel.taglessLegacy,
+    typelevel.taglessCore,
     typelevel.mtlCore,
 )
 
@@ -135,17 +135,30 @@ lazy val JavaCaseStudy = project
 lazy val NeoTemplate = project.settings(
     name := "NeoTemplate",
     scalaVersion := "2.12.8",
-    libraryDependencies ++= Seq(
+    libraryDependencies ++= (logging ++ Seq(
         typelevel.catsCore,
         typelevel.catsEffect,
         backuity.clistCore,
         backuity.clistMacros,
-        typesafe.scalaLogging,
         beachape.enumeratumCats,
         typesafe.akkaActor,
         typesafe.akkaStream
-    ),
+    )),
     scalacOptions ++= Seq(
         "-Ypartial-unification"
     )
+)
+
+lazy val TaglessFinal= project.settings(
+    name := "TaglessFinal",
+    scalaVersion := "2.12.8",
+    libraryDependencies ++= (logging ++ testing ++ Seq(
+        typelevel.catsCore,
+        typelevel.catsEffect,
+        typelevel.taglessMacros
+    )),
+    scalacOptions ++= Seq(
+        "-Ypartial-unification"
+    ),
+    addCompilerPlugin("org.scalamacros" % "paradise" % "2.1.0" cross CrossVersion.full)
 )
