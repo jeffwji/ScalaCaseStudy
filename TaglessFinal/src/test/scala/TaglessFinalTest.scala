@@ -1,7 +1,8 @@
 import cats.{Monad, ~>}
 import org.scalatest.FlatSpec
 import cats.implicits._
-import cats.data.{ Writer, WriterT}
+import cats._
+import cats.data.{State, StateT, Writer, WriterT}
 
 class TaglessFinalTest extends FlatSpec{
     "Tagless final" should "" in {
@@ -18,6 +19,16 @@ class TaglessFinalTest extends FlatSpec{
                 override def send(to: String, subject: String, body: String): EMailWriter[Unit] =
                     Writer(Email(to, subject, body),())
             }
+
+            implicit val _semigroup: Semigroup[Email] = (x: Email, _: Email) => x
+
+            implicit object notifyInterpreterMonad extends Monad[EMailWriter] {
+                override def pure[A](a: A): EMailWriter[A] = Writer(Email("default","",""), a)
+                override def flatMap[A, B](fa: EMailWriter[A])(f: A => EMailWriter[B]): EMailWriter[B] = fa flatMap f
+                override def tailRecM[A, B](a: A)(f: A => EMailWriter[Either[A, B]]): EMailWriter[B] = f(a)map{
+                    case Right(b) => b
+                }
+            }
         }
 
         object Service {
@@ -31,6 +42,8 @@ class TaglessFinalTest extends FlatSpec{
 
         import Service._
         import EmailDsl.EMailWriter
+        import EmailDsl._
+
 
         // Fail ???
         emailNotify[EMailWriter].run
