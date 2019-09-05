@@ -44,8 +44,6 @@ class TaglessFinalTest extends FlatSpec{
         import EmailDsl.EMailWriter
         import EmailDsl._
 
-
-        // Fail ???
         emailNotify[EMailWriter].run
     }
 }
