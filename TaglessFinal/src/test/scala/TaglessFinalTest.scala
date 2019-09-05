@@ -15,10 +15,8 @@ class TaglessFinalTest extends FlatSpec{
 
         object EmailDsl {
             type EMailWriter[A] = Writer[Email, A]
-            implicit object notifyInterpreter extends NotifyDsl[EMailWriter]{
-                override def send(to: String, subject: String, body: String): EMailWriter[Unit] =
+            implicit val notifyInterpreter: NotifyDsl[EMailWriter] = (to: String, subject: String, body: String) =>
                     Writer(Email(to, subject, body),())
-            }
 
             implicit val _semigroup: Semigroup[Email] = (x: Email, _: Email) => x
 
