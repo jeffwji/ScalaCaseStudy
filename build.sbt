@@ -17,16 +17,20 @@ lazy val chuusai = new {
 }
 
 lazy val testing = {
-    val scalaTestVersion = "3.0.5"
-    val scalaMockVersion = "3.5.0"
+    val scalaTestVersion = "3.0.8"
+    val scalaMockVersion = "3.6.0"
     val scalaCheckVersion = "1.14.0"
 
     Seq(
         "org.scalacheck" %% "scalacheck"                  % scalaCheckVersion,
         "org.scalatest"  %% "scalatest"                   % scalaTestVersion,
-        "org.scalamock"  %% "scalamock-scalatest-support" % scalaMockVersion
+        "org.scalamock"  %% "scalamock-scalatest-support" % scalaMockVersion,
     ).map(_ % Test)
 }
+
+lazy val benchmark = Seq(
+    "com.storm-enroute" %% "scalameter" % "0.19"
+).map(_ % Test)
 
 lazy val typelevel = new {
     val catsVersion = "1.6.0"
@@ -149,7 +153,7 @@ lazy val NeoTemplate = project.settings(
     )
 )
 
-lazy val TaglessFinal= project.settings(
+lazy val TaglessFinal = project.settings(
     name := "TaglessFinal",
     scalaVersion := "2.12.8",
     libraryDependencies ++= (logging ++ testing ++ Seq(
@@ -161,4 +165,10 @@ lazy val TaglessFinal= project.settings(
         "-Ypartial-unification"
     ),
     addCompilerPlugin("org.scalamacros" % "paradise" % "2.1.0" cross CrossVersion.full)
+)
+
+lazy val BenchmarkTest = project.settings(
+    name:="BenchmarkTest",
+    scalaVersion := "2.13.0",
+    libraryDependencies ++= (logging ++ benchmark)
 )
