@@ -1,0 +1,37 @@
+import org.scalameter.api._
+
+object ListBenchmark extends Bench.LocalTime {
+    @inline def inline_inc(a:Int) = a + 1
+    @inline def inline_dec(a:Int) = a - 1
+
+    @noinline def inc(a:Int) = a + 1
+    @noinline def dec(a:Int) = a - 1
+
+    val listGroups = for {
+        i <- Gen.range("stuff")(1, 10, 1)
+    } yield List.fill(500000)(i)
+
+    performance of "view" in {
+        using(listGroups) curve("List") in {
+            _.view.map(_ + 1).map{_-1}.force
+        }
+    }
+
+    performance of "outline" in {
+        using(listGroups) curve("List") in {
+            _.map(inc).map{dec}
+        }
+    }
+
+    performance of "inline" in {
+        using(listGroups) curve("List") in {
+            _.map(inline_inc).map{inline_dec}
+        }
+    }
+
+    performance of "map" in {
+        using(listGroups) curve("List") in {
+            _.map(_ + 1).map{_-1}
+        }
+    }
+}
