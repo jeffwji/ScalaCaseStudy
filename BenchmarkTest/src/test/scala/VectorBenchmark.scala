@@ -9,11 +9,17 @@ object VectorBenchmark extends Bench.LocalTime {
 
     val vectorGroups = for {
         i <- Gen.range("stuff")(1, 10, 1)
-    } yield List.fill(500000)(i)
+    } yield Vector.fill(500000)(i)
 
     performance of "view" in {
         using(vectorGroups) curve("List") in {
-            _.view.map(_ + 1).map{_-1}.force
+            _.view.map(_ + 1).map{_-1}.toList
+        }
+    }
+
+    performance of "map" in {
+        using(vectorGroups) curve("List") in {
+            _.map(_ + 1).map{_-1}
         }
     }
 
@@ -26,12 +32,6 @@ object VectorBenchmark extends Bench.LocalTime {
     performance of "inline" in {
         using(vectorGroups) curve("List") in {
             _.map(inline_inc).map{inline_dec}
-        }
-    }
-
-    performance of "map" in {
-        using(vectorGroups) curve("List") in {
-            _.map(_ + 1).map{_-1}
         }
     }
 }
