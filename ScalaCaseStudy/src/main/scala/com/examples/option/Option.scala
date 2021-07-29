@@ -1,4 +1,4 @@
-package com.examples.opt
+package com.examples.option
 
 sealed trait Option[+A] {
   def get():A
